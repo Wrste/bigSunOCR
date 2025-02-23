@@ -58,6 +58,9 @@ Average inference time: 0.0857531323529412 Seconds
 
 CPU model:i7 14700HK，RAM:32GB
 
+Model Download: https://jidugs.wlhex.com/latex_OCR_model.pth
+
+Put it into the 'model_data' folder
 
 
 #### 项目名称
@@ -119,6 +122,10 @@ opencv-python
 **设备配置**
 
 CPU型号：i7 14700HK，内存：32GB
+
+模型下载: https://jidugs.wlhex.com/latex_OCR_model.pth
+
+放入 'model_data' 文件夹
 
 
 
