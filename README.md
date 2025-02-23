@@ -29,6 +29,7 @@ Nickname: Big Sun
 Email: 775106129@qq.com
 
 Company email: fxc@wlhex.com
+If you need to conduct academic research, you can also send me an email to obtain technical details
 
 #### **train**
 
@@ -90,6 +91,7 @@ opencv-python
 邮箱:775106129@qq.com
 
 公司邮箱:fxc@wlhex.com
+需要做学术研究也可以发邮件给我，获得技术细节
 
 #### 训练
 
