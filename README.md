@@ -1,35 +1,28 @@
-#### Project Name
-
-**bigSunOCR**
-
 #### Project Description
 
-This project is developed by a senior artificial intelligence algorithm engineer from Chengdu Weilonghui Technology Co., Ltd. (WIHEX. INC). The main goal of the project is to meet the company's requirements for low-cost training and inference related OCR tasks.
+This project is developed by a senior artificial intelligence algorithm engineer from Chengdu Weilonghui Technology Co., Ltd. (WIHEX. INC). The main goal of the project is to meet the company's requirements for low-cost training and inference related OCR tasks, particularly in educational and research scenarios where handwritten mathematical formulas and complex printed formulas need to be recognized efficiently.
 
 This project aims to achieve good results in handwritten mathematical formulas, printed formulas, complex formula samples, or comprehensive optical character recognition tasks.
 
 **Instructions and references related to this project:**
 
-This project mainly refers to the relevant technical characteristics of CRNN and improves the problem that CRNN does not support the LaTeX formula for long sequences. By changing the shape of the data tensor produced by the CNN layer and rearranging the dimension order of the tensor, the LaTeX formula for images can be implemented in a long-term manner. The project does not use attention mechanism, but instead fuses the features of the images into a ResNet18 network. After passing through two bidirectional LSTMs and the log_stoftmax activation function, the CTC loss function is used to calculate the loss and update the network gradient. Some methods are also used to optimize the network, such as image position encoding and SEBlock, which may not be added, but the effect may not be very good. You can try it yourself
+This project mainly refers to the relevant technical characteristics of CRNN and improves the problem that CRNN does not support the LaTeX formula for long sequences. Specifically, the CNN layer's output tensor shape is modified to better handle long sequences, and the dimension order of the tensor is rearranged to ensure compatibility with image-based LaTeX formula recognition. The project does not use an attention mechanism but instead fuses image features into a ResNet18 network. After passing through two bidirectional LSTMs and the log_softmax activation function, the CTC loss function is used to calculate the loss and update the network gradient. Additional optimizations include image position encoding and SEBlock, which may optionally be added to further enhance performance.
 
 **Related environment**
 
-python>=3.8 
-
-pytorch=2.4.0
-
-opencv-python
-
-
+python>=3.8  
+pytorch==2.4.0  
+opencv-python==4.5.5  
 
 **Project leader:**
 
-Nickname: Big Sun
+Nickname: Big Sun  
 
-Email: 775106129@qq.com
+Email: 775106129@qq.com  
 
-Company email: fxc@wlhex.com
-If you need to conduct academic research, you can also send me an email to obtain technical details
+Company email: fxc@wlhex.com  
+
+If you need to conduct academic research or have any questions about this project, feel free to send me an email to obtain technical details or discuss potential collaborations.
 
 #### **train**
 
@@ -37,8 +30,8 @@ The training set contains 1200 handwritten mathematical formula image files, the
 
 **The final effect of model training**
 
-Total Loss: 1.1550
-Average Loss: 0.004812415804311362
+Total Loss: 1.1550  
+Average Loss: 0.004812415804311362  
 
 Average accuracy: 0.98
 
@@ -46,12 +39,12 @@ Average accuracy: 0.98
 
 **test on cpu **
 
-Average accuracy: 0.7133518634119548
+Average accuracy: 0.7133518634119548  
 Average inference time: 0.0876441 Seconds
 
 **val on cpu **
 
-Average accuracy: 0.778784725587209
+Average accuracy: 0.778784725587209  
 Average inference time: 0.0857531323529412 Seconds
 
 **device config**
@@ -69,7 +62,7 @@ Put it into the 'model_data' folder
 
 #### 项目描述
 
-这个项目由成都微珑汇科技有限公司（WIHEX.INC）的高级人工智能算法工程师开发。项目的主要目标是满足公司对于低成本训练和推理的相关OCR任务需要。
+这个项目由成都微珑汇科技有限公司（WIHEX.INC）的高级人工智能算法工程师开发。项目的主要目标是满足公司对于低成本训练和推理的相关OCR任务需要，特别是在教育和研究场景中，高效地识别手写数学公式和复杂的印刷公式。
 
 该项目旨在对手写数学公式、印刷体公式以及复杂公式样本或综合性光学字符识别任务上达到良好的效果。
 

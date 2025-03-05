@@ -13,8 +13,6 @@ logging.basicConfig(
     level=logging.INFO  # 日志级别
 )
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 device = torch.device("cpu")
 encoding_file = "./Data-for-LaTeX_OCR/hand/formulas/test_vocab_hotel_encoding.txt"  # 编码后的样本文件路径
 # 统一使用大字典
@@ -58,10 +56,6 @@ def load_vocab_hotel_dict():
         return new_dict
 
 
-# symbol_dict = {v: k for k, v in dict.items()}
-
-
-#
 def decode_predictions(out):
     # 使用贪婪解码（选择每个时间步概率最高的字符）
     _, preds = torch.max(out, dim=2)
@@ -103,28 +97,6 @@ def load_images_test_paths():
     return image_data
 
 
-# 验证集
-def load_images_val_paths():
-    image_data = []
-    with open("./Data-for-LaTeX_OCR/hand/matching/val.matching.txt", "r", encoding="utf-8-sig") as f:
-        for line in f.readlines():
-            image_index = line.split(" ")[0]
-            # 记得修改这，这是真实读取得
-            image_data.append(f"./Data-for-LaTeX_OCR/hand/images/images_val/{image_index}")
-    return image_data
-
-
-# 训练集
-def load_images_train_paths():
-    image_data = []
-    with open("./Data-for-LaTeX_OCR/hand/matching/train.matching.txt", "r", encoding="utf-8-sig") as f:
-        for line in f.readlines():
-            image_index = line.split(" ")[0]
-            # 记得修改这，这是真实读取得
-            image_data.append(f"./Data-for-LaTeX_OCR/hand/images/images_train/{image_index}")
-    return image_data
-
-
 def remove_zeros(tensor):
     # 找到非零元素的索引
     non_zero_indices = (tensor != 0).nonzero().squeeze(1)
@@ -133,18 +105,6 @@ def remove_zeros(tensor):
     cleaned_tensor = tensor[non_zero_indices]
 
     return cleaned_tensor
-
-
-def clip_gradient(optimizer, grad_clip):
-    """
-    梯度裁剪用于避免梯度爆炸
-    :param optimizer: optimizer with the gradients to be clipped
-    :param grad_clip: clip value
-    """
-    for group in optimizer.param_groups:
-        for param in group['params']:
-            if param.grad is not None:
-                param.grad.data.clamp_(-grad_clip, grad_clip)
 
 
 def load_image(path):
@@ -173,33 +133,29 @@ def remove_consecutive_duplicates(tensor):
     return torch.tensor(cleaned_tensor, dtype=tensor.dtype)
 
 
-def sequence_to_string(sequence, symbol_dict):
-    return ''.join([symbol_dict[idx] for idx in sequence])
+def split_into_single_sample(data):
+    # data 的形状为 (1216, 10, 769)
+    num_samples = data.shape[1]
+    # 使用 np.split 根据第二维度进行拆分
+    # 结果是一个列表，每个元素的形状为 (1216, 1, 769)
+    batches = np.split(data, num_samples, axis=1)
+    # 确保每一份的形状是 (1216, 1, 769)
+    return [batch.reshape(batch.shape[0], 1, batch.shape[2]) for batch in batches]
 
 
-def calculate_inference_speed(model, image_paths, device):
-    total_time = 0
-    inference_speed_list = []
-    for image_path in image_paths:
-        image_w, image_h = load_image(image_path)
-        image_w = image_w.to(device)
-        image_h = image_h.to(device)
-        time_start = datetime.datetime.now()
-        model.eval()  # 切换到评估模式
-        with torch.no_grad():
-            out = model(image_w, image_h)  # 再次前向传播获取预测
-        time_end = datetime.datetime.now()
-        total_time += (time_end - time_start).total_seconds()
-        inference_speed_list.append((time_end - time_start).total_seconds())
-    average_time = total_time / len(image_paths)
-    print(f"Average Inference Time: {average_time:.4f} seconds per image")
-    return inference_speed_list
+def batch_calculate_accuracy(labels, forecasts, ignore_index=0):
+    accuracy = 0
+    avg_accuracy = 0
 
-
-
-
-
-
+    list_forecasts = split_into_single_sample(forecasts)
+    for index in range(len(list_forecasts)):
+        label = labels[index]
+        mask = label != 0
+        filtered_labels = label[mask]
+        # print(filtered_labels)
+        accuracy += calculate_accuracy(filtered_labels, list_forecasts[index])
+    avg_accuracy = accuracy / len(labels)
+    return avg_accuracy
 
 
 def test(model):
@@ -234,49 +190,6 @@ def test(model):
     print(f"Average accuracy: {average_accuracy}")
     print(f"Average inference time: {average_time} Seconds")
     return average_accuracy, average_time
-
-
-def test_single_image(model):
-    image_w, image_h = load_image("./Data-for-LaTeX_OCR/hand/images/images_test/0.png")
-    image_w = image_w.to(device)
-    image_h = image_h.to(device)
-    # print("rotated_img_h", image_w.shape)
-    # print("rotated_img_h", image_h.shape)
-    # 在训练结束后进行解码
-    time_start = datetime.datetime.now()
-    model.eval()  # 切换到评估模式
-    with torch.no_grad():
-        out = model(image_w, image_h)  # 再次前向传播获取预测
-        # out_lengths = torch.tensor([out.size(0)])  # 假设所有输出长度相同
-        out = decode_predictions(out)
-        print(out)
-        time_end = datetime.datetime.now()
-        print('Time elapsed:: %s Seconds' % (time_end - time_start))
-
-
-def split_into_single_sample(data):
-    # data 的形状为 (1216, 10, 769)
-    num_samples = data.shape[1]
-    # 使用 np.split 根据第二维度进行拆分
-    # 结果是一个列表，每个元素的形状为 (1216, 1, 769)
-    batches = np.split(data, num_samples, axis=1)
-    # 确保每一份的形状是 (1216, 1, 769)
-    return [batch.reshape(batch.shape[0], 1, batch.shape[2]) for batch in batches]
-
-
-def batch_calculate_accuracy(labels, forecasts, ignore_index=0):
-    accuracy = 0
-    avg_accuracy = 0
-
-    list_forecasts = split_into_single_sample(forecasts)
-    for index in range(len(list_forecasts)):
-        label = labels[index]
-        mask = label != 0
-        filtered_labels = label[mask]
-        # print(filtered_labels)
-        accuracy += calculate_accuracy(filtered_labels, list_forecasts[index])
-    avg_accuracy = accuracy / len(labels)
-    return avg_accuracy
 
 
 if __name__ == '__main__':
