@@ -1,135 +1,145 @@
-#### Project Description
+# BigSunOCR
 
-This project is developed by a senior artificial intelligence algorithm engineer from Chengdu Weilonghui Technology Co., Ltd. (WIHEX. INC). The main goal of the project is to meet the company's requirements for low-cost training and inference related OCR tasks, particularly in educational and research scenarios where handwritten mathematical formulas and complex printed formulas need to be recognized efficiently.
+<div align="center">
+    <img src="assets/logo_professional.png" alt="BigSunOCR Logo" width="500"/>
+    <p>基于深度学习的数学公式OCR识别系统</p>
+    <p>Deep Learning-based Mathematical Formula OCR Recognition System</p>
+</div>
 
-This project aims to achieve good results in handwritten mathematical formulas, printed formulas, complex formula samples, or comprehensive optical character recognition tasks.
-
-**Instructions and references related to this project:**
-
-This project mainly refers to the relevant technical characteristics of CRNN and improves the problem that CRNN does not support the LaTeX formula for long sequences. Specifically, the CNN layer's output tensor shape is modified to better handle long sequences, and the dimension order of the tensor is rearranged to ensure compatibility with image-based LaTeX formula recognition. The project does not use an attention mechanism but instead fuses image features into a ResNet18 network. After passing through two bidirectional LSTMs and the log_softmax activation function, the CTC loss function is used to calculate the loss and update the network gradient. Additional optimizations include image position encoding and SEBlock, which may optionally be added to further enhance performance.
-
-**Related environment**
-
-python>=3.8  
-pytorch==2.4.0  
-opencv-python==4.5.5  
-
-**Project leader:**
-
-Nickname: Big Sun  
-
-Email: 775106129@qq.com  
-
-Company email: fxc@wlhex.com  
-
-If you need to conduct academic research or have any questions about this project, feel free to send me an email to obtain technical details or discuss potential collaborations.
-
-#### **train**
-
-The training set contains 1200 handwritten mathematical formula image files, the testing set contains 70 handwritten mathematical formula image files, and the validation set contains 68 handwritten mathematical formula image files
-
-**The final effect of model training**
-
-Total Loss: 1.1550  
-Average Loss: 0.004812415804311362  
-
-Average accuracy: 0.98
-
-#### **Testing and Verification**
-
-**test on cpu **
-
-Average accuracy: 0.7133518634119548  
-Average inference time: 0.0876441 Seconds
-
-**val on cpu **
-
-Average accuracy: 0.778784725587209  
-Average inference time: 0.0857531323529412 Seconds
-
-**device config**
-
-CPU model:i7 14700HK，RAM:32GB
-
-Model Download: https://jidugs.wlhex.com/latex_OCR_model.pth
-
-Put it into the 'model_data' folder
-
-
-#### 项目名称
-
-**bigSunOCR**
-
-#### 项目描述
+## 项目简介 | Project Introduction
 
 这个项目由成都微珑汇科技有限公司（WIHEX.INC）的高级人工智能算法工程师开发。项目的主要目标是满足公司对于低成本训练和推理的相关OCR任务需要，特别是在教育和研究场景中，高效地识别手写数学公式和复杂的印刷公式。
 
 该项目旨在对手写数学公式、印刷体公式以及复杂公式样本或综合性光学字符识别任务上达到良好的效果。
 
-**该项目相关说明与参考：**
+This project is developed by a senior artificial intelligence algorithm engineer from Chengdu Weilonghui Technology Co., Ltd. (WIHEX. INC). The main goal of the project is to meet the company's requirements for low-cost training and inference related OCR tasks, particularly in educational and research scenarios where handwritten mathematical formulas and complex printed formulas need to be recognized efficiently.
 
-该项目主要是的参考了CRNN的相关技术特点，并改进了CRNN对长序列的latex公式不支持的问题，通过改变CNN层出来的数据张量的形状，并重新排列张量的维度顺序，来实现对图片latex公式的长序列支持，项目没有采用注意力机制，而是通过将图片进行特征融合送入一个ResNet18网络，再经过两个双向lstm经过log_softmax激活函数后，再使用CTC损失函数计算损失并更新网络梯度，也采用了一些方法优化该网络例如:图片位置编码，SEBlock等也可以不加但是也许效果不太好，可以自己动手试试.
+This project aims to achieve good results in handwritten mathematical formulas, printed formulas, complex formula samples, or comprehensive optical character recognition tasks.
 
-**相关环境**
+## 技术特点 | Technical Features
 
-python>=3.8 
+该项目主要参考了CRNN的相关技术特点，并改进了CRNN对长序列的LaTeX公式不支持的问题。通过改变CNN层输出的数据张量形状，并重新排列张量的维度顺序，实现了对图片LaTeX公式的长序列支持。项目没有采用注意力机制，而是通过将图片进行特征融合送入一个ResNet18网络，再经过两个双向LSTM和log_softmax激活函数后，使用CTC损失函数计算损失并更新网络梯度。
 
-pytorch=2.4.0
+项目还采用了一些优化方法，例如：
+- 图片位置编码
+- SEBlock（Squeeze-and-Excitation Block）
+- 残差连接
 
-opencv-python
+This project mainly refers to the relevant technical characteristics of CRNN and improves the problem that CRNN does not support LaTeX formulas for long sequences. Specifically, the CNN layer's output tensor shape is modified to better handle long sequences, and the dimension order of the tensor is rearranged to ensure compatibility with image-based LaTeX formula recognition. 
+
+The project does not use an attention mechanism but instead fuses image features into a ResNet18 network. After passing through two bidirectional LSTMs and the log_softmax activation function, the CTC loss function is used to calculate the loss and update the network gradient. Additional optimizations include:
+- Image position encoding
+- SEBlock (Squeeze-and-Excitation Block)
+- Residual connections
+
+## 环境要求 | Environment Requirements
+
+```
+python >= 3.8
+pytorch == 2.4.0
+opencv-python == 4.5.5
+numpy
+matplotlib
+tqdm
+```
+
+## 安装指南 | Installation Guide
+
+1. 克隆仓库 | Clone the repository
+```bash
+git clone https://github.com/yourusername/bigSunOCR.git
+cd bigSunOCR
+```
+
+2. 安装依赖 | Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+3. 下载预训练模型 | Download pre-trained model
+```bash
+# 下载模型并放入model_data文件夹
+# Download the model and put it in the model_data folder
+# 模型下载链接 | Model download link: https://jidugs.wlhex.com/latex_OCR_model.pth
+```
+
+## 使用方法 | Usage
+
+### 训练模型 | Training the Model
+
+```bash
+python trainModel.py
+```
+
+### 测试模型 | Testing the Model
+
+```bash
+python testModel.py
+```
+
+### 使用模型进行预测 | Using the Model for Prediction
+
+```bash
+python predict.py --image_path path/to/your/image.jpg
+```
+
+## 项目结构 | Project Structure
+
+```
+bigSunOCR/
+├── Data-for-LaTeX_OCR/       # 数据集 | Dataset
+│   ├── hand/                 # 手写公式数据 | Handwritten formula data
+│   └── vocabDict/            # 词汇表 | Vocabulary dictionary
+├── model/                    # 模型定义 | Model definition
+│   └── model.py              # 模型架构 | Model architecture
+├── model_data/               # 预训练模型 | Pre-trained models
+│   └── latex_OCR_model.pth   # 预训练权重 | Pre-trained weights
+├── assets/                   # 项目资源 | Project assets
+│   └── logo.png              # 项目logo | Project logo
+├── examples/                 # 示例代码 | Example code
+│   └── example.py            # 使用示例 | Usage example
+├── trainModel.py             # 训练脚本 | Training script
+├── testModel.py              # 测试脚本 | Testing script
+├── predict.py                # 预测脚本 | Prediction script
+├── utils.py                  # 工具函数 | Utility functions
+├── requirements.txt          # 依赖列表 | Dependency list
+├── LICENSE                   # 许可证 | License
+└── README.md                 # 项目说明 | Project description
+```
+
+## 性能指标 | Performance Metrics
+
+### 训练效果 | Training Results
+- 总损失 | Total Loss: 1.1550
+- 平均损失 | Average Loss: 0.004812415804311362
+- 平均准确度 | Average Accuracy: 0.98
+
+### 测试效果 | Testing Results (CPU)
+- 平均准确度 | Average Accuracy: 0.7133518634119548
+- 平均推理时间 | Average Inference Time: 0.0876441 秒 | seconds
+
+### 验证效果 | Validation Results (CPU)
+- 平均准确度 | Average Accuracy: 0.778784725587209
+- 平均推理时间 | Average Inference Time: 0.0857531323529412 秒 | seconds
 
 
 
-**项目负责人:**
+## 联系方式 | Contact Information
 
-昵称:太阳大(big sun)
+**项目负责人 | Project Leader:**
+- 昵称 | Nickname: 太阳大 (Big Sun)
+- 邮箱 | Email: 775106129@qq.com
+- 公司邮箱 | Company Email: fxc@wlhex.com
 
-邮箱:775106129@qq.com
+如需进行学术研究或有任何问题，欢迎发送邮件获取技术细节或讨论潜在合作。
 
-公司邮箱:fxc@wlhex.com
-需要做学术研究也可以发邮件给我，获得技术细节
+If you need to conduct academic research or have any questions about this project, feel free to send an email to obtain technical details or discuss potential collaborations.
 
-#### 训练
+## 许可证 | License
 
-训练集有1200个手写数学公式图片文件，测试集70个手写数学公式图片文件，验证集：68个手写数学公式图片。
-
-**模型训练的最终效果**
-
-总损失：1.1550
-平均损失：0.004812415804311362
-
-平均准确度：0.98
-
-**测试和验证**
-
-**cpu运行测试数据集**
-
-平均准确度：0.7133518634119548
-平均推理时间：0.0876441秒
-
-**cpu上运行验证数据集**
-
-平均准确度：0.778784725587209
-平均推理时间：0.0857531323529412秒
-
-**设备配置**
-
-CPU型号：i7 14700HK，内存：32GB
-
-模型下载: https://jidugs.wlhex.com/latex_OCR_model.pth
-
-放入 'model_data' 文件夹
-
-
-
-#### license
-
-Apache License                           
-
-Version 2.0, January 2004                        
-
-http://www.apache.org/licenses/ 
+Apache License Version 2.0, January 2004
+http://www.apache.org/licenses/
 
 Copyright (c) 2024 XingChengFu (bigSun), WLHEX INC.
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at     http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
